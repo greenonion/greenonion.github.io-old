@@ -1,0 +1,229 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>SICP Solutions: Sections 1.3.2 and 1.3.3</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/borland.css">
+    
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css" integrity="sha384-R4558gYOUz8mP9YWpZJjofhk+zx0AS11p36HnD2ZKj/6JR5z27gSSULCNHIRReVs" crossorigin="anonymous">
+    
+    <link type="application/atom+xml" rel="alternate" href="/feed.xml" />
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>SICP Solutions: Sections 1.3.2 and 1.3.3</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="SICP Solutions: Sections 1.3.2 and 1.3.3" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Section 1.3.2 - Constructing Procedures Using Lambda" />
+<meta property="og:description" content="Section 1.3.2 - Constructing Procedures Using Lambda" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-08-26T07:42:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="SICP Solutions: Sections 1.3.2 and 1.3.3" />
+<script type="application/ld+json">
+{"description":"Section 1.3.2 - Constructing Procedures Using Lambda","headline":"SICP Solutions: Sections 1.3.2 and 1.3.3","dateModified":"2017-08-26T07:42:00+00:00","datePublished":"2017-08-26T07:42:00+00:00","url":"/2017/08/26/sicp-1-3-2-and-1-3-3.html","mainEntityOfPage":{"@type":"WebPage","@id":"/2017/08/26/sicp-1-3-2-and-1-3-3.html"},"@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+  <body>
+    <nav>
+  Nikos Fertakis
+  
+  <a href="/" >Home</a>
+  
+  <a href="/blog.html" >Blog</a>
+  
+  <a href="/about.html" >About</a>
+  
+</nav>
+
+    <h1>SICP Solutions: Sections 1.3.2 and 1.3.3</h1>
+
+<p>
+  26 Aug 2017
+  
+  
+</p>
+
+<h3 id="section-132---constructing-procedures-using-lambda">Section 1.3.2 - Constructing Procedures Using Lambda</h3>
+
+<h4 id="exercise-134">Exercise 1.34</h4>
+
+<p>It will blow up trying to use the number 2 in the function position. Observe:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="nf">f</span> <span class="nv">f</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">f</span> <span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">2</span> <span class="mi">2</span><span class="p">)</span></code></pre></figure>
+
+<h3 id="section-133---procedures-as-general-methods">Section 1.3.3 - Procedures as General Methods</h3>
+
+<h4 id="exercise-135">Exercise 1.35</h4>
+
+<p>We already know that:</p>
+
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msup><mi>ϕ</mi><mn>2</mn></msup><mo>=</mo><mi>ϕ</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\phi^2 = \phi + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0585479999999998em;vertical-align:-0.19444em;"></span><span class="mord"><span class="mord mathnormal">ϕ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641079999999999em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">ϕ</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span></span>
+
+<p>and dividing both parts by <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn></mrow><annotation encoding="application/x-tex">2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span></span></span></span>:</p>
+
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>ϕ</mi><mo>=</mo><mn>1</mn><mo>+</mo><mfrac><mn>1</mn><mi>ϕ</mi></mfrac></mrow><annotation encoding="application/x-tex">\phi = 1 + \frac{1}{\phi}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">ϕ</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:2.20188em;vertical-align:-0.8804400000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.32144em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">ϕ</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.8804400000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>
+
+<p>So:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">phi</span> <span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">fixed-point</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">y</span><span class="p">)</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span> <span class="p">(</span><span class="nb">/</span> <span class="mi">1</span> <span class="nv">y</span><span class="p">)))</span> <span class="nv">x</span><span class="p">))</span></code></pre></figure>
+
+<h4 id="exercise-136">Exercise 1.36</h4>
+
+<p>Here is <code class="language-plaintext highlighter-rouge">fixed-point</code> now:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">fixed-point</span> <span class="nv">f</span> <span class="nv">first-guess</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">close-enough?</span> <span class="nv">v1</span> <span class="nv">v2</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">&lt;</span> <span class="p">(</span><span class="nb">abs</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">v1</span> <span class="nv">v2</span><span class="p">))</span> <span class="nv">tolerance</span><span class="p">))</span>
+  <span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">try</span> <span class="nv">guess</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">report-approx</span> <span class="nv">guess</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nf">next</span> <span class="p">(</span><span class="nf">f</span> <span class="nv">guess</span><span class="p">)))</span>
+      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">close-enough?</span> <span class="nv">guess</span> <span class="nv">next</span><span class="p">)</span>
+          <span class="nv">next</span>
+          <span class="p">(</span><span class="nf">try</span> <span class="nv">next</span><span class="p">))))</span>
+  <span class="p">(</span><span class="nf">try</span> <span class="nv">first-guess</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">report-approx</span> <span class="nv">a</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">display</span> <span class="s">" *** "</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">display</span> <span class="nv">a</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">newline</span><span class="p">))</span></code></pre></figure>
+
+<p>And we can define <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mi>x</mi></msup></mrow><annotation encoding="application/x-tex">x^x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.664392em;vertical-align:0em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span></span></span></span></span></span></span></span> as:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">x-on-x</span> <span class="nv">first-guess</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">fixed-point</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">/</span> <span class="p">(</span><span class="nb">log</span> <span class="mi">1000</span><span class="p">)</span> <span class="p">(</span><span class="nb">log</span> <span class="nv">x</span><span class="p">)))</span> <span class="nv">first-guess</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">x-on-x-dumping</span> <span class="nv">first-guess</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">fixed-point</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">/</span> <span class="p">(</span><span class="nb">log</span> <span class="mi">1000</span><span class="p">)</span> <span class="p">(</span><span class="nb">*</span> <span class="mi">2</span> <span class="p">(</span><span class="nb">log</span> <span class="nv">x</span><span class="p">)))</span>
+                                <span class="p">(</span><span class="nb">/</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">)))</span> <span class="nv">first-guess</span><span class="p">))</span></code></pre></figure>
+
+<p>Now we can call both:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="nf">x-on-x</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="nv">=&gt;</span>
+<span class="nv">***</span> <span class="mf">1.1</span>
+<span class="nv">***</span> <span class="mf">72.47657378429035</span>
+<span class="nv">***</span> <span class="mf">1.6127318474109593</span>
+<span class="nv">***</span> <span class="mf">14.45350138636525</span>
+<span class="nv">***</span> <span class="mf">2.5862669415385087</span>
+<span class="nv">***</span> <span class="mf">7.269672273367045</span>
+<span class="nv">***</span> <span class="mf">3.4822383620848467</span>
+<span class="nv">***</span> <span class="mf">5.536500810236703</span>
+<span class="nv">***</span> <span class="mf">4.036406406288111</span>
+<span class="nv">***</span> <span class="mf">4.95053682041456</span>
+<span class="nv">***</span> <span class="mf">4.318707390180805</span>
+<span class="nv">***</span> <span class="mf">4.721778787145103</span>
+<span class="nv">***</span> <span class="mf">4.450341068884912</span>
+<span class="nv">***</span> <span class="mf">4.626821434106115</span>
+<span class="nv">***</span> <span class="mf">4.509360945293209</span>
+<span class="nv">***</span> <span class="mf">4.586349500915509</span>
+<span class="nv">***</span> <span class="mf">4.535372639594589</span>
+<span class="nv">***</span> <span class="mf">4.568901484845316</span>
+<span class="nv">***</span> <span class="mf">4.546751100777536</span>
+<span class="nv">***</span> <span class="mf">4.561341971741742</span>
+<span class="nv">***</span> <span class="mf">4.551712230641226</span>
+<span class="nv">***</span> <span class="mf">4.558059671677587</span>
+<span class="nv">***</span> <span class="mf">4.55387226495538</span>
+<span class="nv">***</span> <span class="mf">4.556633177654167</span>
+<span class="nv">***</span> <span class="mf">4.554812144696459</span>
+<span class="nv">***</span> <span class="mf">4.556012967736543</span>
+<span class="nv">***</span> <span class="mf">4.555220997683307</span>
+<span class="nv">***</span> <span class="mf">4.555743265552239</span>
+<span class="nv">***</span> <span class="mf">4.555398830243649</span>
+<span class="nv">***</span> <span class="mf">4.555625974816275</span>
+<span class="nv">***</span> <span class="mf">4.555476175432173</span>
+<span class="nv">***</span> <span class="mf">4.555574964557791</span>
+<span class="nv">***</span> <span class="mf">4.555509814636753</span>
+<span class="nv">***</span> <span class="mf">4.555552779647764</span>
+<span class="nv">***</span> <span class="mf">4.555524444961165</span>
+<span class="nv">***</span> <span class="mf">4.555543131130589</span>
+<span class="nv">***</span> <span class="mf">4.555530807938518</span>
+<span class="mf">4.555538934848503</span></code></pre></figure>
+
+<p>34 steps. Now with dampening:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="nf">x-on-x-dumping</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="nv">=&gt;</span>
+<span class="nv">***</span> <span class="mf">1.1</span>
+<span class="nv">***</span> <span class="mf">36.78828689214517</span>
+<span class="nv">***</span> <span class="mf">19.352175531882512</span>
+<span class="nv">***</span> <span class="mf">10.84183367957568</span>
+<span class="nv">***</span> <span class="mf">6.870048352141772</span>
+<span class="nv">***</span> <span class="mf">5.227224961967156</span>
+<span class="nv">***</span> <span class="mf">4.701960195159289</span>
+<span class="nv">***</span> <span class="mf">4.582196773201124</span>
+<span class="nv">***</span> <span class="mf">4.560134229703681</span>
+<span class="nv">***</span> <span class="mf">4.5563204194309606</span>
+<span class="nv">***</span> <span class="mf">4.555669361784037</span>
+<span class="nv">***</span> <span class="mf">4.555558462975639</span>
+<span class="nv">***</span> <span class="mf">4.55553957996306</span>
+<span class="mf">4.555536364911781</span></code></pre></figure>
+
+<p>13 steps. Dampening helps a lot in this case.</p>
+
+<h4 id="exercise-137">Exercise 1.37</h4>
+
+<p>We can define <code class="language-plaintext highlighter-rouge">cont-frac</code> as such:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">cont-frac</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">cont-frac-iter</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">cont-frac-iter</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span> <span class="nv">i</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="nv">i</span> <span class="nv">k</span><span class="p">)</span>
+      <span class="p">(</span><span class="nb">/</span> <span class="p">(</span><span class="nf">n</span> <span class="nv">i</span><span class="p">)</span> <span class="p">(</span><span class="nf">d</span> <span class="nv">i</span><span class="p">))</span>
+      <span class="p">(</span><span class="nb">/</span> <span class="p">(</span><span class="nf">n</span> <span class="nv">i</span><span class="p">)</span>
+         <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nf">d</span> <span class="nv">i</span><span class="p">)</span> <span class="p">(</span><span class="nf">cont-frac-iter</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span> <span class="p">(</span><span class="nf">inc</span> <span class="nv">i</span><span class="p">))))))</span></code></pre></figure>
+
+<p>It takes 11 iterations to reach four-digit accuracy:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="nf">cont-frac</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span> <span class="mi">11</span><span class="p">)</span>
+<span class="nv">=&gt;</span>
+<span class="mf">0.6180555555555556</span></code></pre></figure>
+
+<p>This was of course a recursive process. We can write an iterative now:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">cont-frac</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">cont-frac-iter</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span> <span class="nv">k</span> <span class="mi">0</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">cont-frac-iter</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span> <span class="nv">i</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="nv">i</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="nv">res</span>
+    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nf">next</span> <span class="p">(</span><span class="nb">/</span> <span class="p">(</span><span class="nf">n</span> <span class="nv">i</span><span class="p">)</span> <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nf">d</span> <span class="nv">i</span><span class="p">)</span> <span class="nv">res</span><span class="p">))))</span>
+      <span class="p">(</span><span class="nf">cont-frac-iter</span> <span class="nv">n</span> <span class="nv">d</span> <span class="nv">k</span> <span class="p">(</span><span class="nf">dec</span> <span class="nv">i</span><span class="p">)</span> <span class="nv">next</span><span class="p">))))</span></code></pre></figure>
+
+<p>Note that the iterative solution has to calculate the result from the ground up,
+starting from <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span></span></span></span> all the way up to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn></mrow><annotation encoding="application/x-tex">1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span>.</p>
+
+<h4 id="exercise-138">Exercise 1.38</h4>
+
+<p>We need to define <code class="language-plaintext highlighter-rouge">d</code>:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">d</span> <span class="nv">i</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="p">(</span><span class="nb">remainder</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">i</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">*</span> <span class="p">(</span><span class="nb">/</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">i</span> <span class="mi">1</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">2</span><span class="p">)</span>
+     <span class="mi">1</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">euler</span> <span class="nv">k</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">+</span> <span class="mi">2</span> <span class="p">(</span><span class="nf">cont-frac</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="mf">1.0</span><span class="p">)</span> <span class="nv">d</span> <span class="nv">k</span><span class="p">)))</span></code></pre></figure>
+
+<p>For <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo>=</mo><mn>8</mn></mrow><annotation encoding="application/x-tex">k = 8</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">8</span></span></span></span> the approximation is accurate to 4 decimal places.</p>
+
+<h4 id="exercise-139">Exercise 1.39</h4>
+
+<p>Again, using <code class="language-plaintext highlighter-rouge">cont-frac</code>:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">tan-cf</span> <span class="nv">x</span> <span class="nv">k</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">cont-frac</span>
+   <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="nv">i</span> <span class="mi">1</span><span class="p">)</span> <span class="nv">x</span> <span class="p">(</span><span class="nb">-</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">))))</span>
+   <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">i</span><span class="p">)</span> <span class="p">(</span><span class="nb">-</span> <span class="p">(</span><span class="nb">*</span> <span class="mi">2</span> <span class="nv">i</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+   <span class="nv">k</span><span class="p">))</span></code></pre></figure>
+
+
+
+  </body>
+</html>

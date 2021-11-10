@@ -1,0 +1,291 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>SICP Solutions: Sections 1.2.5 and 1.2.6</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/borland.css">
+    
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.1/dist/katex.min.css" integrity="sha384-R4558gYOUz8mP9YWpZJjofhk+zx0AS11p36HnD2ZKj/6JR5z27gSSULCNHIRReVs" crossorigin="anonymous">
+    
+    <link type="application/atom+xml" rel="alternate" href="/feed.xml" />
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>SICP Solutions: Sections 1.2.5 and 1.2.6</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="SICP Solutions: Sections 1.2.5 and 1.2.6" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Section 1.2.5 - Greatest Common Divisors" />
+<meta property="og:description" content="Section 1.2.5 - Greatest Common Divisors" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-06-16T14:23:35+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="SICP Solutions: Sections 1.2.5 and 1.2.6" />
+<script type="application/ld+json">
+{"description":"Section 1.2.5 - Greatest Common Divisors","headline":"SICP Solutions: Sections 1.2.5 and 1.2.6","dateModified":"2017-06-16T14:23:35+00:00","datePublished":"2017-06-16T14:23:35+00:00","url":"/2017/06/16/sicp-1-2-5-and-1-2-6.html","mainEntityOfPage":{"@type":"WebPage","@id":"/2017/06/16/sicp-1-2-5-and-1-2-6.html"},"@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+  <body>
+    <nav>
+  Nikos Fertakis
+  
+  <a href="/" >Home</a>
+  
+  <a href="/blog.html" >Blog</a>
+  
+  <a href="/about.html" >About</a>
+  
+</nav>
+
+    <h1>SICP Solutions: Sections 1.2.5 and 1.2.6</h1>
+
+<p>
+  16 Jun 2017
+  
+  
+</p>
+
+<h3 id="section-125---greatest-common-divisors">Section 1.2.5 - Greatest Common Divisors</h3>
+
+<h4 id="exercise-120">Exercise 1.20</h4>
+
+<p>The difference between applicative and normal order is that applicative first
+evaluates the arguments and then applies the procedure. In contrast, normal
+order first expands the procedure and then reduces it. Also note that <code class="language-plaintext highlighter-rouge">if</code> is a
+special form, where which (and whether) procedure is evaluated depends on the
+predicate.</p>
+
+<p>Let’s first see the applicative order:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="nb">gcd</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">)</span> <span class="c1">;; apply if, second branch produces</span>
+<span class="p">(</span><span class="nb">gcd</span> <span class="mi">40</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">))</span> <span class="c1">;; remember, we evaluate arguments first</span>
+<span class="p">(</span><span class="nb">gcd</span> <span class="mi">40</span> <span class="mi">6</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">gcd</span> <span class="mi">40</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">40</span> <span class="mi">6</span><span class="p">))</span> <span class="c1">;; 2nd time we need remainder</span>
+<span class="p">(</span><span class="nb">gcd</span> <span class="mi">6</span> <span class="mi">4</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">gcd</span> <span class="mi">4</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">4</span> <span class="mi">6</span><span class="p">))</span> <span class="c1">;; 3rd time</span>
+<span class="p">(</span><span class="nb">gcd</span> <span class="mi">4</span> <span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">gcd</span> <span class="mi">2</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">4</span> <span class="mi">2</span><span class="p">))</span> <span class="c1">;; 4th time</span>
+<span class="p">(</span><span class="nb">gcd</span> <span class="mi">2</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">;; the predicate is true</span>
+<span class="mi">2</span></code></pre></figure>
+
+<p>In the normal order, we first expand and then apply only as needed. So:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="nb">gcd</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">)</span> <span class="c1">;; apply if, second branch produces</span>
+<span class="p">(</span><span class="nb">gcd</span> <span class="mi">40</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">))</span> <span class="c1">;; the if will be as follows</span>
+<span class="c1">;; apply gcd</span>
+<span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">;; this gets evaluated, so 1 call</span>
+    <span class="mi">40</span>
+    <span class="p">(</span><span class="nb">gcd</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">)</span>
+         <span class="p">(</span><span class="nb">remainder</span> <span class="mi">40</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">))))</span>
+<span class="c1">;; apply gcd</span>
+<span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">40</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">))</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">;; 2 calls</span>
+    <span class="p">(</span><span class="nb">remainder</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">gcd</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">40</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">))</span>
+         <span class="p">(</span><span class="nb">remainder</span>
+           <span class="p">(</span><span class="nb">remainder</span> <span class="mi">206</span> <span class="mi">40</span>
+             <span class="p">(</span><span class="nb">remainder</span> <span class="mi">40</span> <span class="p">(</span><span class="nb">remainder</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">))))))</span>
+<span class="c1">;; apply gcd</span>
+<span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="p">(</span><span class="nf">rem</span> <span class="p">(</span><span class="nf">rem</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">)</span> <span class="p">(</span><span class="nf">rem</span> <span class="mi">40</span> <span class="p">(</span><span class="nf">rem</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">)))</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">;; 4 calls</span>
+    <span class="p">(</span><span class="nf">rem</span> <span class="mi">40</span> <span class="p">(</span><span class="nf">rem</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">))</span>
+    <span class="p">(</span><span class="nb">gcd</span> <span class="p">(</span><span class="nf">rem</span> <span class="p">(</span><span class="nf">rem</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">)</span> <span class="p">(</span><span class="nf">rem</span> <span class="mi">40</span> <span class="p">(</span><span class="nf">rem</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">)))</span>
+         <span class="p">(</span><span class="nf">rem</span>
+           <span class="p">(</span><span class="nf">rem</span> <span class="mi">40</span> <span class="p">(</span><span class="nf">rem</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">))</span>
+           <span class="p">(</span><span class="nf">rem</span> <span class="p">(</span><span class="nf">rem</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">)</span> <span class="p">(</span><span class="nf">rem</span> <span class="mi">40</span> <span class="p">(</span><span class="nf">rem</span> <span class="mi">206</span> <span class="mi">40</span><span class="p">))))))</span>
+<span class="c1">;; apply gcd</span>
+<span class="c1">;; this time the predicate will be b from the previous</span>
+<span class="c1">;; iteration which contains 7 calls to remainder but</span>
+<span class="c1">;; evaluates to 0 so we evaluate a from the previous</span>
+<span class="c1">;; iteration (4 calls to remainder) and we are done.</span></code></pre></figure>
+
+<p>So in summary, the normal order will need:
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>+</mo><mn>2</mn><mo>+</mo><mn>4</mn><mo>+</mo><mn>7</mn><mo>+</mo><mn>4</mn><mo>=</mo><mn>18</mn></mrow><annotation encoding="application/x-tex">1 + 2 + 4 + 7 + 4 = 18</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">7</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">18</span></span></span></span> calls to <code class="language-plaintext highlighter-rouge">remainder</code>.</p>
+
+<h3 id="section-126---example-testing-for-primality">Section 1.2.6 - Example: Testing for Primality</h3>
+
+<h4 id="exercise-121">Exercise 1.21</h4>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="nv">&gt;</span> <span class="p">(</span><span class="nf">smallest-divisor</span> <span class="mi">199</span><span class="p">)</span>
+<span class="mi">199</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nf">smallest-divisor</span> <span class="mi">1999</span><span class="p">)</span>
+<span class="mi">1999</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nf">smallest-divisor</span> <span class="mi">19999</span><span class="p">)</span>
+<span class="mi">7</span></code></pre></figure>
+
+<p>So while <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>199</mn></mrow><annotation encoding="application/x-tex">199</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">199</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1999</mn></mrow><annotation encoding="application/x-tex">1999</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1999</span></span></span></span> are primes, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>19999</mn></mrow><annotation encoding="application/x-tex">19999</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">19999</span></span></span></span> is not.</p>
+
+<h4 id="exercise-122">Exercise 1.22</h4>
+
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mn>10</mn></msqrt><mo>=</mo><mn>3.17</mn></mrow><annotation encoding="application/x-tex">\sqrt{10} = 3.17</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.13278em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.90722em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord">10</span></span></span><span style="top:-2.86722em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg width='400em' height='1.08em' viewBox='0 0 400000 1080' preserveAspectRatio='xMinYMin slice'><path d='M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.13278em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3.17</span></span></span></span>. This means that we expect time to roughly triple between
+orders of magnitude. Our results are:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="c1">;; Greater than 1,000</span>
+<span class="c1">;; 1009 *** 3</span>
+<span class="c1">;; 1013 *** 2</span>
+<span class="c1">;; 1019 *** 2</span>
+<span class="c1">;; Greater than 10,000</span>
+<span class="c1">;; 10007 *** 6</span>
+<span class="c1">;; 10009 *** 6</span>
+<span class="c1">;; 10037 *** 6</span>
+<span class="c1">;; Greater than 100,000</span>
+<span class="c1">;; 100003 *** 17</span>
+<span class="c1">;; 100019 *** 18</span>
+<span class="c1">;; 100043 *** 18</span>
+<span class="c1">;; Greater than 1,000,000</span>
+<span class="c1">;; 1000003 *** 59</span>
+<span class="c1">;; 1000033 *** 59</span>
+<span class="c1">;; 1000037 *** 59</span></code></pre></figure>
+
+<p>The results roughly confirm our calculations. We wouldn’t expect exact results
+since the actual timing depends on a lot of things.</p>
+
+<h4 id="exercise-123">Exercise 1.23</h4>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">next</span> <span class="nv">n</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">=</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)</span>
+      <span class="mi">3</span>
+      <span class="p">(</span><span class="nb">+</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)))</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="c1">;; 1009 *** 6</span>
+<span class="c1">;; 1013 *** 6</span>
+<span class="c1">;; 1019 *** 6</span>
+<span class="c1">;; 10007 *** 9</span>
+<span class="c1">;; 10009 *** 8</span>
+<span class="c1">;; 10037 *** 8</span>
+<span class="c1">;; 100003 *** 16</span>
+<span class="c1">;; 100019 *** 15</span>
+<span class="c1">;; 100043 *** 16</span>
+<span class="c1">;; 1000003 *** 41</span>
+<span class="c1">;; 1000033 *** 40</span>
+<span class="c1">;; 1000037 *** 40</span></code></pre></figure>
+
+<p>Essentially the steps taken by the algorithm will now be limited by
+$\sqrt{n}/2$. This means that $\sqrt{n}$ will still dominate the algorithm, but
+given a large-enough input the time will be roughly halved.</p>
+
+<h4 id="exercise-124">Exercise 1.24</h4>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="c1">;; 1009 *** 13</span>
+<span class="c1">;; 1013 *** 13</span>
+<span class="c1">;; 1019 *** 13</span>
+<span class="c1">;; 10007 *** 15</span>
+<span class="c1">;; 10009 *** 14</span>
+<span class="c1">;; 10037 *** 14</span>
+<span class="c1">;; 100003 *** 21</span>
+<span class="c1">;; 100019 *** 16</span>
+<span class="c1">;; 100043 *** 16</span>
+<span class="c1">;; 1000003 *** 17</span>
+<span class="c1">;; 1000033 *** 18</span>
+<span class="c1">;; 1000037 *** 19</span></code></pre></figure>
+
+<p>We would expect the time to test primes near $1,000,000$ to be roughly the
+triple of the time to test primes near $1,000$. We do not obseve even that kind
+of change, probably due to fast hardware, but we do observe that the runtime
+grows very slowly.</p>
+
+<h4 id="exercise-125">Exercise 1.25</h4>
+
+<p>While conceptually Alyssa is correct, in practice the call to <code class="language-plaintext highlighter-rouge">fast-expt</code> will
+result in dealing with big numbers, and trying to find their <code class="language-plaintext highlighter-rouge">remainder</code>. Our
+<code class="language-plaintext highlighter-rouge">expmod</code> method will always find the remainder of small numbers, multiply them
+together, find their remainder, etc. See footnote 46. Bear in mind also that
+primality checks are usually done for very large numbers.</p>
+
+<p>The results are pretty grave in practice:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="c1">;; 1009 *** 92</span>
+<span class="c1">;; 1013 *** 102</span>
+<span class="c1">;; 1019 *** 83</span>
+<span class="c1">;; 10007 *** 3071</span>
+<span class="c1">;; 10009 *** 3192</span>
+<span class="c1">;; 10037 *** 2880</span></code></pre></figure>
+
+<h4 id="exercise-126">Exercise 1.26</h4>
+
+<p>By rewriting the <code class="language-plaintext highlighter-rouge">expmod</code> procedure to use explicit multiplication, Louis has
+changed it into a tree recursive process from a linear one. This means that in
+each steps two subtrees will be created, and the amount of calls grow
+exponentially. So <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mn>2</mn><mrow><mi>log</mi><mo>⁡</mo><mi>n</mi></mrow></msup><mo>=</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">2^{\log n} = n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8491079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mop mtight"><span class="mtight">l</span><span class="mtight">o</span><span class="mtight" style="margin-right:0.01389em;">g</span></span><span class="mspace mtight" style="margin-right:0.19516666666666668em;"></span><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathnormal">n</span></span></span></span>.</p>
+
+<h4 id="exercise-127">Exercise 1.27</h4>
+
+<p>We create a procedure <code class="language-plaintext highlighter-rouge">congruent?</code> as such:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">congruent?</span> <span class="nv">n</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">congruent-iter</span> <span class="nv">n</span> <span class="mi">0</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">congruent-iter</span> <span class="nv">n</span> <span class="nv">a</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">cond</span> <span class="p">((</span><span class="nb">=</span> <span class="nv">a</span> <span class="nv">n</span><span class="p">)</span> <span class="nv">true</span><span class="p">)</span>
+        <span class="p">((</span><span class="nb">=</span> <span class="p">(</span><span class="nf">expmod</span> <span class="nv">a</span> <span class="nv">n</span> <span class="nv">n</span><span class="p">)</span> <span class="nv">a</span><span class="p">)</span> <span class="p">(</span><span class="nf">congruent-iter</span> <span class="nv">n</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">a</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="p">(</span><span class="k">else</span> <span class="nv">false</span><span class="p">)))</span></code></pre></figure>
+
+<p>Calling the procedure for the Carmichael numbers of footnote 47 (561, 1105,
+1729, 2465, 2821 and 6601) we always get <code class="language-plaintext highlighter-rouge">#t</code>. The <code class="language-plaintext highlighter-rouge">fast-prime?</code> procedure would
+be fooled. However, we can use the <code class="language-plaintext highlighter-rouge">prime?</code> procedure to confirm that these
+numbers are not primes.</p>
+
+<h4 id="exercise-128">Exercise 1.28</h4>
+
+<p>First we create the function that performs the check and short-circuits the
+computation:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">miller-rabin-check</span> <span class="nv">a</span> <span class="nv">m</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="k">and</span> <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nb">=</span> <span class="nv">a</span> <span class="mi">1</span><span class="p">))</span>
+           <span class="p">(</span><span class="nb">not</span> <span class="p">(</span><span class="nb">=</span> <span class="nv">a</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">m</span> <span class="mi">1</span><span class="p">)))</span>
+           <span class="p">(</span><span class="nb">=</span> <span class="p">(</span><span class="nb">remainder</span> <span class="p">(</span><span class="nf">square</span> <span class="nv">a</span><span class="p">)</span> <span class="nv">m</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+      <span class="mi">0</span>
+      <span class="nv">a</span><span class="p">))</span></code></pre></figure>
+
+<p>We want to use the above before squaring the result of each iteration. Since we
+cannot store variables yet, what we can do is wrap the <code class="language-plaintext highlighter-rouge">expmod</code> call to itself
+inside a <code class="language-plaintext highlighter-rouge">miller-rabin-check</code> call. <code class="language-plaintext highlighter-rouge">miller-rabin-check</code> will get the result of
+the previous iteration as input, and check whether it is a non-trivial square
+root of 1. If it is, it will return 0, essentially short-circuting the result.
+If it is not, it will return the result, thus letting <code class="language-plaintext highlighter-rouge">expmod</code> continue as
+usual.</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">miller-rabin-expmod</span> <span class="nv">base</span> <span class="nv">exp</span> <span class="nv">m</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">cond</span> <span class="p">((</span><span class="nb">=</span> <span class="nv">exp</span> <span class="mi">0</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">((</span><span class="nb">even?</span> <span class="nv">exp</span><span class="p">)</span>
+         <span class="p">(</span><span class="nb">remainder</span>
+          <span class="p">(</span><span class="nf">square</span>
+           <span class="p">(</span><span class="nf">miller-rabin-check</span>
+            <span class="p">(</span><span class="nf">miller-rabin-expmod</span> <span class="nv">base</span> <span class="p">(</span><span class="nb">/</span> <span class="nv">exp</span> <span class="mi">2</span><span class="p">)</span> <span class="nv">m</span><span class="p">)</span> <span class="nv">m</span><span class="p">))</span> <span class="nv">m</span><span class="p">))</span>
+        <span class="p">(</span><span class="k">else</span>
+         <span class="p">(</span><span class="nb">remainder</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">base</span>
+          <span class="p">(</span><span class="nf">miller-rabin-expmod</span> <span class="nv">base</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">exp</span> <span class="mi">1</span><span class="p">)</span> <span class="nv">m</span><span class="p">))</span>
+          <span class="nv">m</span><span class="p">))))</span></code></pre></figure>
+
+<p>Finally, we can run the check for half the size of the input to make sure we
+produce the correct answer:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">miller-rabin-test</span> <span class="nv">n</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">try-it</span> <span class="nv">a</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">=</span> <span class="p">(</span><span class="nf">miller-rabin-expmod</span> <span class="nv">a</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)</span> <span class="nv">n</span><span class="p">)</span> <span class="mi">1</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">try-it</span> <span class="p">(</span><span class="nb">+</span> <span class="mi">1</span> <span class="p">(</span><span class="nf">random</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">n</span> <span class="mi">1</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">miller-rabin-prime?</span> <span class="nv">n</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">test-prime</span> <span class="nv">times</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">cond</span> <span class="p">((</span><span class="nb">&lt;=</span> <span class="nv">times</span> <span class="mi">0</span><span class="p">)</span> <span class="nv">true</span><span class="p">)</span>
+          <span class="p">((</span><span class="nf">miller-rabin-test</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nf">test-prime</span> <span class="p">(</span><span class="nb">-</span> <span class="nv">times</span> <span class="mi">1</span><span class="p">)))</span>
+          <span class="p">(</span><span class="k">else</span> <span class="nv">false</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">test-prime</span> <span class="p">(</span><span class="nb">/</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">)))</span></code></pre></figure>
+
+<p>We can use both the prime numbers we found and the Carmichael numbers to confirm
+that our new procedure always produces the correct result and is not fooled.</p>
+
+
+
+  </body>
+</html>

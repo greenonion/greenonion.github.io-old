@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>SICP Solutions: Section 1.1.7</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/borland.css">
+    
+    <link type="application/atom+xml" rel="alternate" href="/feed.xml" />
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>SICP Solutions: Section 1.1.7</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="SICP Solutions: Section 1.1.7" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Section 1.1.7" />
+<meta property="og:description" content="Section 1.1.7" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2017-06-16T10:10:57+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="SICP Solutions: Section 1.1.7" />
+<script type="application/ld+json">
+{"description":"Section 1.1.7","headline":"SICP Solutions: Section 1.1.7","dateModified":"2017-06-16T10:10:57+00:00","datePublished":"2017-06-16T10:10:57+00:00","url":"/2017/06/16/sicp-1-1-7.html","mainEntityOfPage":{"@type":"WebPage","@id":"/2017/06/16/sicp-1-1-7.html"},"@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+  <body>
+    <nav>
+  Nikos Fertakis
+  
+  <a href="/" >Home</a>
+  
+  <a href="/blog.html" >Blog</a>
+  
+  <a href="/about.html" >About</a>
+  
+</nav>
+
+    <h1>SICP Solutions: Section 1.1.7</h1>
+
+<p>
+  16 Jun 2017
+  
+  
+</p>
+
+<h2 id="section-117">Section 1.1.7</h2>
+
+<h3 id="exercise-16">Exercise 1.6</h3>
+
+<p>If <code class="language-plaintext highlighter-rouge">if</code> is not a special form, and is a procedure based on <code class="language-plaintext highlighter-rouge">cond</code> instead, it
+would lose its short-circuiting property, as, due to applicative-order
+evaluation, all of the arguments would need be evaluated just as the
+<code class="language-plaintext highlighter-rouge">new-if</code> procedure would be called.</p>
+
+<p>In our case, the program would fall into an infinite loop, always trying to
+evaluate the next <code class="language-plaintext highlighter-rouge">sqrt-iter</code>, even if <code class="language-plaintext highlighter-rouge">good-enough?</code> would return true.</p>
+
+<h3 id="exercise-17">Exercise 1.7</h3>
+
+<p>For very small numbers, <code class="language-plaintext highlighter-rouge">0.001</code> will be of the same order of magnitude with the
+solution. This means that the tolerance will not be adequate to reach a
+good-enough solution. For example, calculating the square root of <code class="language-plaintext highlighter-rouge">0.0001</code>
+itself (which is <code class="language-plaintext highlighter-rouge">0.01</code>), our algorithm will yield:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="nv">&gt;</span> <span class="p">(</span><span class="nb">sqrt</span> <span class="mf">0.0001</span><span class="p">)</span>
+<span class="mf">0.0323084483304812</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="nv">&gt;</span> <span class="p">(</span><span class="nf">square</span> <span class="mf">0.032</span><span class="p">)</span>
+<span class="mf">0.001024</span></code></pre></figure>
+
+<p>For very large numbers, the algorithm might never terminate because the machine
+precision will not be able to represent small differences between large numbers.
+This means that <code class="language-plaintext highlighter-rouge">good-enough?</code> will never return <code class="language-plaintext highlighter-rouge">#t</code>. The tipping point is
+between \( 10^{12} \) (which returns) and \( 10^{13} \) (which runs
+infinitely).</p>
+
+<p>What happens is that after a few iterations, the <code class="language-plaintext highlighter-rouge">guess</code> will be
+<code class="language-plaintext highlighter-rouge">3,162,277.6601683795</code>. When running <code class="language-plaintext highlighter-rouge">good-enough?</code>, the procedure will try to
+square it, yielding <code class="language-plaintext highlighter-rouge">10,000,000,000,000.002</code>, which isn’t good enough according
+to the <code class="language-plaintext highlighter-rouge">0.001</code> desired error. When trying to improve this, the procedure will
+need the average of the guess and of the <code class="language-plaintext highlighter-rouge">x/y = 3,162,277.660168379</code>. However,
+this reaches the limit of the numbers that can be represented, and the average
+is again <code class="language-plaintext highlighter-rouge">3,162,277.6601683795</code> which means <code class="language-plaintext highlighter-rouge">guess</code> will remain unchanged and
+the program will enter an infinite loop.</p>
+
+<p>To improve, we can use the following listing which uses the suggested solution
+of making sure that the guess actually improves between runs, again using the
+value <code class="language-plaintext highlighter-rouge">0.001</code> as a threshold - if the ratio between or old guess and the new
+one hasn’t changed at least by that number, then we consider our calculations
+finished.</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">improve</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">average</span> <span class="nv">guess</span> <span class="p">(</span><span class="nb">/</span> <span class="nv">x</span> <span class="nv">guess</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">average</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">/</span> <span class="p">(</span><span class="nb">+</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">guess-improved?</span> <span class="nv">guess</span> <span class="nv">old-guess</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">&gt;</span> <span class="p">(</span><span class="nb">abs</span> <span class="p">(</span><span class="nb">-</span> <span class="mi">1</span> <span class="p">(</span><span class="nb">/</span> <span class="nv">guess</span> <span class="nv">old-guess</span><span class="p">)))</span> <span class="mf">0.001</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">sqrt-iter</span> <span class="nv">guess</span> <span class="nv">old-guess</span> <span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">guess-improved?</span> <span class="nv">guess</span> <span class="nv">old-guess</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">sqrt-iter</span> <span class="p">(</span><span class="nf">improve</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+               <span class="nv">guess</span>
+               <span class="nv">x</span><span class="p">)</span>
+    <span class="nv">guess</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nb">sqrt</span> <span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">sqrt-iter</span> <span class="mf">1.0</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">sqrt</span> <span class="mf">0.0001</span><span class="p">)</span></code></pre></figure>
+
+<h3 id="exercise-18">Exercise 1.8</h3>
+
+<p>We just need to use a different <code class="language-plaintext highlighter-rouge">improve</code> procedure:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme">  <span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">improve</span> <span class="nv">guess</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">/</span> <span class="p">(</span><span class="nb">+</span> <span class="p">(</span><span class="nb">/</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">square</span> <span class="nv">guess</span><span class="p">))</span>
+       <span class="p">(</span><span class="nb">*</span> <span class="mi">2</span> <span class="nv">guess</span><span class="p">))</span>
+     <span class="mi">3</span><span class="p">))</span></code></pre></figure>
+
+
+
+  </body>
+</html>

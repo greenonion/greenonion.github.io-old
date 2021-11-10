@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>SICP Solutions: Section 2.2.1</title>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/borland.css">
+    
+    <link type="application/atom+xml" rel="alternate" href="/feed.xml" />
+    <!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>SICP Solutions: Section 2.2.1</title>
+<meta name="generator" content="Jekyll v4.2.1" />
+<meta property="og:title" content="SICP Solutions: Section 2.2.1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Section 2.2 - Hierarchical Data and the Closure Property" />
+<meta property="og:description" content="Section 2.2 - Hierarchical Data and the Closure Property" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-03-09T18:06:52+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="SICP Solutions: Section 2.2.1" />
+<script type="application/ld+json">
+{"description":"Section 2.2 - Hierarchical Data and the Closure Property","headline":"SICP Solutions: Section 2.2.1","dateModified":"2018-03-09T18:06:52+00:00","datePublished":"2018-03-09T18:06:52+00:00","url":"/2018/03/09/sicp-2-2-1.html","mainEntityOfPage":{"@type":"WebPage","@id":"/2018/03/09/sicp-2-2-1.html"},"@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+  </head>
+  <body>
+    <nav>
+  Nikos Fertakis
+  
+  <a href="/" >Home</a>
+  
+  <a href="/blog.html" >Blog</a>
+  
+  <a href="/about.html" >About</a>
+  
+</nav>
+
+    <h1>SICP Solutions: Section 2.2.1</h1>
+
+<p>
+  09 Mar 2018
+  
+  
+</p>
+
+<h2 id="section-22---hierarchical-data-and-the-closure-property">Section 2.2 - Hierarchical Data and the Closure Property</h2>
+
+<h3 id="section-221---representing-sequences">Section 2.2.1 - Representing Sequences</h3>
+
+<h4 id="exercise-217">Exercise 2.17</h4>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">last-pair</span> <span class="nv">items</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">null?</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">items</span><span class="p">))</span>
+        <span class="nv">items</span>
+        <span class="p">(</span><span class="nf">last-pair</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">items</span><span class="p">))))</span></code></pre></figure>
+
+<h4 id="exercise-218">Exercise 2.18</h4>
+
+<p>This is the iterative version:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nb">reverse</span> <span class="nv">items</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">reverse-iter</span> <span class="nv">i</span> <span class="nv">l</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">null?</span> <span class="nv">i</span><span class="p">)</span>
+          <span class="nv">l</span>
+          <span class="p">(</span><span class="nf">reverse-iter</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">i</span><span class="p">)</span> <span class="p">(</span><span class="nb">cons</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">i</span><span class="p">)</span> <span class="nv">l</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nf">reverse-iter</span> <span class="nv">items</span> <span class="nv">nil</span><span class="p">))</span></code></pre></figure>
+
+<p>We can use <code class="language-plaintext highlighter-rouge">append</code> to create a recursive version:</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nb">reverse</span> <span class="nv">items</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">null?</span> <span class="nv">items</span><span class="p">)</span>
+        <span class="nv">nil</span>
+        <span class="p">(</span><span class="nb">append</span> <span class="p">(</span><span class="nb">reverse</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">items</span><span class="p">))</span> <span class="p">(</span><span class="nb">list</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">items</span><span class="p">)))))</span></code></pre></figure>
+
+<p>But this will be more expensive because <code class="language-plaintext highlighter-rouge">append</code> will iterate over each subset.</p>
+
+<h4 id="exercise-219">Exercise 2.19</h4>
+
+<p>The three procedures are really simple actually, just renaming the
+list-operating procedures.</p>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">first-denomination</span> <span class="nv">coin-values</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">car</span> <span class="nv">coin-values</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">except-first-denomination</span> <span class="nv">coin-values</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">cdr</span> <span class="nv">coin-values</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">no-more?</span> <span class="nv">coin-values</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">null?</span> <span class="nv">coin-values</span><span class="p">))</span></code></pre></figure>
+
+<p>The order of list <code class="language-plaintext highlighter-rouge">coin-values</code> does not affect the answer produced by <code class="language-plaintext highlighter-rouge">cc</code>.
+This is because the procedure is not based on any assumption regarding the order
+of the elements.</p>
+
+<h4 id="exercise-220">Exercise 2.20</h4>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">same-parity</span> <span class="o">.</span> <span class="nv">i</span><span class="p">)</span>
+    <span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">iter-parity</span> <span class="nv">f</span> <span class="nv">l</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">cond</span> <span class="p">((</span><span class="nb">null?</span> <span class="nv">l</span><span class="p">)</span> <span class="nv">l</span><span class="p">)</span>
+            <span class="p">((</span><span class="nf">f</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">l</span><span class="p">))</span> <span class="p">(</span><span class="nb">cons</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">l</span><span class="p">)</span> <span class="p">(</span><span class="nf">iter-parity</span> <span class="nv">f</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">l</span><span class="p">))))</span>
+            <span class="p">(</span><span class="k">else</span> <span class="p">(</span><span class="nf">iter-parity</span> <span class="nv">f</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">l</span><span class="p">)))))</span>
+    <span class="p">(</span><span class="k">cond</span> <span class="p">((</span><span class="nb">null?</span> <span class="nv">i</span><span class="p">)</span> <span class="nv">nil</span><span class="p">)</span>
+          <span class="p">((</span><span class="nb">even?</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">i</span><span class="p">))</span> <span class="p">(</span><span class="nf">iter-parity</span> <span class="nv">even?</span> <span class="nv">i</span><span class="p">))</span>
+          <span class="p">((</span><span class="nb">odd?</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">i</span><span class="p">))</span> <span class="p">(</span><span class="nf">iter-parity</span> <span class="nv">odd?</span> <span class="nv">i</span><span class="p">))))</span></code></pre></figure>
+
+<h4 id="exercise-221">Exercise 2.21</h4>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">square-list</span> <span class="nv">items</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">null?</span> <span class="nv">items</span><span class="p">)</span>
+      <span class="nv">nil</span>
+      <span class="p">(</span><span class="nb">cons</span> <span class="p">(</span><span class="nb">*</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">items</span><span class="p">)</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">items</span><span class="p">))</span>
+            <span class="p">(</span><span class="nf">square-list</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">items</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nf">square-list</span> <span class="nv">items</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">map</span> <span class="p">(</span><span class="k">lambda</span> <span class="p">(</span><span class="nf">x</span><span class="p">)</span> <span class="p">(</span><span class="nb">*</span> <span class="nv">x</span> <span class="nv">x</span><span class="p">))</span> <span class="nv">items</span><span class="p">))</span></code></pre></figure>
+
+<h4 id="exercise-222">Exercise 2.22</h4>
+
+<p>Louis’ solution is essentially how we implemented <code class="language-plaintext highlighter-rouge">reverse</code> for exercise 2.18.
+Each iteration creates something like <code class="language-plaintext highlighter-rouge">(cons 9 (cons 4 (cons 1 nil)))</code>,
+which is exactly how lists are implemented.</p>
+
+<p>Unfortunately the second solution is no good either, because it is the inverse
+of how lists are implemented, and results into something like
+<code class="language-plaintext highlighter-rouge">(cons (cons (cons nil 1) 4) 9)</code>. The order is correct, but this isn’t how
+Scheme structures lists from <code class="language-plaintext highlighter-rouge">cons</code> cells.</p>
+
+<h4 id="exercise-223">Exercise 2.23</h4>
+
+<figure class="highlight"><pre><code class="language-scheme" data-lang="scheme"><span class="p">(</span><span class="k">define</span> <span class="p">(</span><span class="nb">for-each</span> <span class="nv">proc</span> <span class="nv">items</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">cond</span> <span class="p">((</span><span class="nb">null?</span> <span class="nv">items</span><span class="p">)</span> <span class="nv">nil</span><span class="p">)</span>
+        <span class="p">(</span><span class="k">else</span> <span class="p">(</span><span class="nf">proc</span> <span class="p">(</span><span class="nb">car</span> <span class="nv">items</span><span class="p">))</span>
+              <span class="p">(</span><span class="nf">my-for-each</span> <span class="nv">proc</span> <span class="p">(</span><span class="nb">cdr</span> <span class="nv">items</span><span class="p">)))))</span></code></pre></figure>
+
+
+
+  </body>
+</html>
