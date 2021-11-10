@@ -13,3 +13,4 @@ group :jekyll_plugins do
 end
 
 gem 'kramdown-math-katex'
+gem 'execjs'
