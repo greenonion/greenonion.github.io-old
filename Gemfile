@@ -12,5 +12,5 @@ group :jekyll_plugins do
   gem 'jekyll-seo-tag'
 end
 
-gem 'kramdown-math-katex'
 gem 'execjs'
+gem 'kramdown-math-katex'
