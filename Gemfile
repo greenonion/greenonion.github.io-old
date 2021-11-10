@@ -14,3 +14,4 @@ end
 
 gem 'execjs'
 gem 'kramdown-math-katex'
+gem 'mini_racer'
